@@ -15,12 +15,20 @@ tripFile = open("Traffic_Match_Summary_Records__TMSR_Test_Data.json")
 line = sensorFile.readline()
 
 count = 0
+lamarCount = 0
+riverCount = 0
+readerID = ""
 
 while (sensorFile):
     line = sensorFile.readline()
     try:
         item = json.loads(line)
         #print("long: ", item["LOCATION_LONGITUDE"])
+        readerID = item["READER_ID"]
+        if (readerID.find("lamar") != -1):
+            lamarCount += 1
+        if (readerID.find("riverside") != -1):
+            riverCount += 1
         sensor_list[item["READER_ID"]] = {}
         sensor_list[item["READER_ID"]]["latitude"] = float(item["LOCATION_LATITUDE"])
         sensor_list[item["READER_ID"]]["longitude"] = float(item["LOCATION_LONGITUDE"])
@@ -31,6 +39,8 @@ while (sensorFile):
         break
 
 print (count, " sensors in list")
+print (lamarCount, " sensors on Lamar")
+print (riverCount, " sensors on Riverside")
 
 
 # GoogleMapPlotter return Map object
