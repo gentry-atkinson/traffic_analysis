@@ -14,6 +14,8 @@ tripFile = open("Traffic_Match_Summary_Records__TMSR_Test_Data.json")
 
 line = sensorFile.readline()
 
+count = 0
+
 while (sensorFile):
     line = sensorFile.readline()
     try:
@@ -24,8 +26,11 @@ while (sensorFile):
         sensor_list[item["READER_ID"]]["longitude"] = float(item["LOCATION_LONGITUDE"])
         latitude_list.append(float(item["LOCATION_LATITUDE"]))
         longitude_list.append(float(item["LOCATION_LONGITUDE"]))
+        count += 1
     except:
         break
+
+print (count, " sensors in list")
 
 
 # GoogleMapPlotter return Map object
@@ -33,7 +38,8 @@ while (sensorFile):
 # center longitude
 gmap1 = gmplot.GoogleMapPlotter(30.2525959, -97.7374269, 11 )
 
-gmap1.scatter( latitude_list, longitude_list, '# 00FF00', size = 120, marker = False )
+gmap1.scatter( latitude_list, longitude_list, 'purple', size = 120, marker = False )
+#gmap1.marker(latitude_list, longitude_list, 'purple')
 
 line = tripFile.readline()
 
@@ -46,7 +52,7 @@ while (tripFile):
     count += 1
     try:
         item = json.loads(line)
-        print ("Plotting ", item["origin_reader_identifier"], " to ", item["destination_reader_identifier"])
+        #print ("Plotting ", item["origin_reader_identifier"], " to ", item["destination_reader_identifier"])
         #print ("Origin Lat: ", sensor_list[item["origin_reader_identifier"]]["latitude"])
         #print ("Origin Long: ", sensor_list[item["origin_reader_identifier"]]["longitude"])
         #print ("Dest Lat: ", sensor_list[item["destination_reader_identifier"]]["latitude"])
@@ -69,7 +75,7 @@ while (tripFile):
         #print ("Lats", plotLat)
         #print ("Longs", plotLong)
 
-        gmap1.plot(plotLat, plotLong, 'cornflowerblue', edge_width=5)
+        gmap1.plot(plotLat, plotLong, 'cornflowerblue', edge_width=3)
     except EOFError:
         print ("I reached the end")
         break
