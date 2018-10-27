@@ -3,10 +3,10 @@
 import json
 import os
 
-inFile = open("Individual_Traffic_Match_Files__ITMF_Test_Data.json", 'r')
+inFile = open("/media/gentry/DATA/cs7311/data_sets/Individual_Traffic_Match_Files__ITMF_.json", 'r')
 
 try:
-    os.system('mkdir split_traffic_files')
+    os.system('mkdir /media/gentry/DATA/cs7311/data_sets/split_traffic_files')
 except:
     print("Output directory already exists")
 
@@ -27,8 +27,8 @@ while(inFile):
         #print (date)
         if (date != oldDate):
             oldDate = date
-            filename = "split_traffic_files/ITMF_" + date
-            outFile = open(filename, 'w')
+            filename = "/media/gentry/DATA/cs7311/data_sets/split_traffic_files/ITMF_" + date
+            outFile = open(filename, 'a+')
             #outFile.write("New file")
             item = json.dumps(item)
             outFile.write(item)
