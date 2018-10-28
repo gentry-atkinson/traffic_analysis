@@ -3,7 +3,7 @@
 import json
 import os
 
-inFile = open("/media/gentry/DATA/cs7311/data_sets/Individual_Traffic_Match_Files__ITMF_.json", 'r')
+inFile = open("/media/gentry/My Drive/cs7311/Individual_Traffic_Match_Files__ITMF_.json", 'r')
 
 try:
     os.system('mkdir /media/gentry/DATA/cs7311/data_sets/split_traffic_files')
@@ -32,10 +32,12 @@ while(inFile):
             #outFile.write("New file")
             item = json.dumps(item)
             outFile.write(item)
+            outFile.write("\n")
             fileCounter += 1
         else:
             item = json.dumps(item)
             outFile.write(item)
+            outFile.write("\n")
         counter += 1
     except:
         print ("error in converter loop")
