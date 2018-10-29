@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 
 import json
-
+import itertools
 
 
 def timeInGraph(item):
+    #print ("timeInGraph called for ", item)
     for key in graph.keys():
         if (item == key):
             return True
     return False
+
 
 def locInTime(item, time):
     for key in graph[time].keys():
@@ -16,17 +18,59 @@ def locInTime(item, time):
             return True
     return False
 
-inFile = open('/media/gentry/DATA/cs7311/data_sets/split_traffic_files/ITMF_2016-01-01')
+
+def powerset(iterable):
+    print (iterable)
+    "powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
+    s = list(iterable)
+    print (s)
+    return itertools.chain.from_iterable(itertools.combinations(s, r) for r in range(len(s)+1))
+
+
+def findWalk(devices, time, sLocation, cLocation, length, outfile, graph):
+    print(devices, " sent to findWalk for ", cLocation)
+    nextNodes = graph[time][cLocation]["adjList"]
+    for node in nextNodes:
+        nextTime = node.split('/', 2)[0]
+        nextLoc = node.split('/', 2)[1]
+        print ("Checking walk from ", cLocation, " to ", nextLoc)
+        if (compareList(devices, graph[nextTime][nextLoc]["devices"])):
+            findWalk(devices, nextTime, sLocation, nextLoc, length+1, outFile, graph)
+    if (length > 0):
+        print ("Walk found over ", length, " nodes.")
+        outString = "{\"Num_Devices\" : \"" + len(devices) + "\", "
+        outString = outString + "\"Walk_Length\" : \"" + length + "\", "
+        outString = outString + "\"Origin\" : \"" + sLocation + "\", "
+        outString = outString + "\"Destination\" : \"" + cLocation + "\"}"
+        outFile.write((outString))
+
+
+def compareList (list1, list2):
+    for item1 in list1:
+        for item2 in list2:
+            if (item1 == item2):
+                found = True
+        if (not found):
+            return False
+        found = False
+    return True
+
+
+inFile = open('/media/gentry/DATA/cs7311/data_sets/split_traffic_files/ITMF_2015-12-31')
 
 counter = 0
 graph = {}
-time = ""
+sTime = ""
+eTime = ""
 timeCounter = 0
 nodeCounter = 0
 highestOrderNode = 0
 oNode = ""
 dNode = ""
-adjList = {}
+oLocation = ""
+dLocation = ""
+allTimes = list()
+walkCounter = 0
 
 line = inFile.readline()
 
@@ -36,71 +80,109 @@ while(inFile):
     line = inFile.readline()
     try:
         item = json.loads(line)
-        time = item["Start Time"]
-        #print (time)
-        time = time.split('T', 2)[1]
-        time = time.split('-', 2)[0]
-        time = time.split(':', 3)[0] + ':' + time.split(':', 3)[1]
-        #print (time)
+
+        sTime = item["Start Time"]
+        sTime = sTime.split('T', 2)[1]
+        sTime = sTime.split('-', 2)[0]
+        sTime = sTime.split(':', 3)[0] + ':' + sTime.split(':', 3)[1]
+
+        eTime = item["End Time"]
+        eTime = eTime.split('T', 2)[1]
+        eTime = eTime.split('-', 2)[0]
+        eTime = eTime.split(':', 3)[0] + ':' + eTime.split(':', 3)[1]
 
         counter += 1
-        if (not timeInGraph(time)):
-            #print ("New Time ", time)
-            graph[time] = {}
+        if (not timeInGraph(sTime)):
+            #print ("New Time ", sTime)
+            graph[sTime] = dict()
             timeCounter += 1
+            allTimes.append(sTime)
 
-        location = item["Origin Reader Identifier"]
-        oNode = time+location
-        #print (location)
+        counter += 1
+        if (not timeInGraph(eTime)):
+            #print ("New Time ", eTime)
+            graph[eTime] = dict()
+            timeCounter += 1
+            allTimes.append(eTime)
 
-        if (not locInTime(location, time)):
+        oLocation = item["Origin Reader Identifier"]
+
+        if (not locInTime(oLocation, sTime)):
             #print ("New Location ", location)
-            graph[time][location] = {}
-            graph[time][location]["device_count"] = 0
-            graph[time][location]["speed"] = 0
-            graph[time][location]["devices"] = list()
+            graph[sTime][oLocation] = {}
+            graph[sTime][oLocation]["device_count"] = 0
+            graph[sTime][oLocation]["speed"] = 0
+            graph[sTime][oLocation]["devices"] = list()
             nodeCounter += 1
-            adjList[oNode] = list()
+            graph[sTime][oLocation]["adjList"] = list()
 
         #print("Updating Node")
-        graph[time][location]["device_count"] += 1
+        graph[sTime][oLocation]["device_count"] += 1
+        if (graph[sTime][oLocation]["device_count"] > highestOrderNode):
+            highestOrderNode = graph[sTime][oLocation]["device_count"]
         increment = float(item["Speed (Miles Per Hour)"])
-        increment -= graph[time][location]["speed"]
-        increment /= graph[time][location]["device_count"]
-        graph[time][location]["speed"] += increment
-        graph[time][location]["devices"].append(item["Device Address"])
+        increment -= graph[sTime][oLocation]["speed"]
+        increment /= graph[sTime][oLocation]["device_count"]
+        graph[sTime][oLocation]["speed"] += increment
+        graph[sTime][oLocation]["devices"].append(item["Device Address"])
         #print ("Devices at this location and time: ", graph[time][location]["device_count"])
 
-        location = item["Destination Reader Identifier"]
-        dNode = time + location
-        #print (location)
+        dLocation = item["Destination Reader Identifier"]
 
-        if (not locInTime(location, time)):
+        if (not locInTime(dLocation, eTime)):
             #print ("New Location ", location)
-            graph[time][location] = {}
-            graph[time][location]["device_count"] = 0
-            graph[time][location]["speed"] = 0
-            graph[time][location]["devices"] = list()
+            graph[eTime][dLocation] = {}
+            graph[eTime][dLocation]["device_count"] = 0
+            graph[eTime][dLocation]["speed"] = 0
+            graph[eTime][dLocation]["devices"] = list()
             nodeCounter += 1
             try:
-                adjList[oNode].append(dNode)
+                dNode = eTime + "/" + dLocation
+                oNode = sTime + "/" + oLocation
+                graph[sTime][oLocation]["adjList"].append(dNode)
             except:
                 print ("Cant add ", dNode, " to ", oNode)
 
         #print("Updating Node")
-        graph[time][location]["device_count"] += 1
-        if (graph[time][location]["device_count"] > highestOrderNode):
-            highestOrderNode = graph[time][location]["device_count"]
+        graph[eTime][dLocation]["device_count"] += 1
+        if (graph[eTime][dLocation]["device_count"] > highestOrderNode):
+            highestOrderNode = graph[eTime][dLocation]["device_count"]
         increment = float(item["Speed (Miles Per Hour)"])
-        increment -= graph[time][location]["speed"]
-        increment /= graph[time][location]["device_count"]
-        graph[time][location]["speed"] += increment
-        graph[time][location]["devices"].append(item["Device Address"])
+        increment -= graph[eTime][dLocation]["speed"]
+        increment /= graph[eTime][dLocation]["device_count"]
+        graph[eTime][dLocation]["speed"] += increment
+        graph[eTime][dLocation]["devices"].append(item["Device Address"])
         #print ("Devices at this location and time: ", graph[time][location]["device_count"])
     except:
+        print ("Halted graph making with sTime: ", sTime, " eTime: ", eTime)
         break
 
+outFile = open("walks_over_Austin.json", 'w+')
+
+try:
+    print (len(allTimes), " times to check")
+
+    for time in allTimes:
+        print (len(graph[time].keys()), " locations to check")
+        for loc in graph[time].keys():
+            print ("Check ", loc, " at ", time)
+            deviceList = powerset(graph[time][loc]["devices"])
+            print (deviceList)
+            #print (len(deviceList), " devices to check")
+            for devices in deviceList:
+                print (devices)
+                if (devices):
+                    walkCounter += 1
+                    print ("Checking walk number ", walkCounter)
+                    findWalk(devices, time, loc, loc, 0, outFile, graph)
+                    print ("Finished checking walk number ", walkCounter)
+
+except:
+    print ("Halted in walk taking")
+
 print (counter, " items processed")
-print (nodeCounter, " nodes created in ", timeCounter, " times")
+print (nodeCounter, " nodes created in ", timeCounter, " times", )
 print ("Highest order node: ", highestOrderNode)
+print (walkCounter, " walks investigated.")
+
 
