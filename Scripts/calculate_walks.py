@@ -16,13 +16,17 @@ def locInTime(item, time):
             return True
     return False
 
-inFile = open('/media/gentry/DATA/cs7311/data_sets/split_traffic_files/ITMF_2015-12-31')
+inFile = open('/media/gentry/DATA/cs7311/data_sets/split_traffic_files/ITMF_2016-01-01')
 
 counter = 0
 graph = {}
 time = ""
 timeCounter = 0
 nodeCounter = 0
+highestOrderNode = 0
+oNode = ""
+dNode = ""
+adjList = {}
 
 line = inFile.readline()
 
@@ -41,20 +45,22 @@ while(inFile):
 
         counter += 1
         if (not timeInGraph(time)):
-            print ("New Time ", time)
+            #print ("New Time ", time)
             graph[time] = {}
             timeCounter += 1
 
         location = item["Origin Reader Identifier"]
+        oNode = time+location
         #print (location)
 
         if (not locInTime(location, time)):
-            print ("New Location ", location)
+            #print ("New Location ", location)
             graph[time][location] = {}
             graph[time][location]["device_count"] = 0
             graph[time][location]["speed"] = 0
             graph[time][location]["devices"] = list()
             nodeCounter += 1
+            adjList[oNode] = list()
 
         #print("Updating Node")
         graph[time][location]["device_count"] += 1
@@ -63,30 +69,38 @@ while(inFile):
         increment /= graph[time][location]["device_count"]
         graph[time][location]["speed"] += increment
         graph[time][location]["devices"].append(item["Device Address"])
-        print ("Devices at this location and time: ", graph[time][location]["device_count"])
+        #print ("Devices at this location and time: ", graph[time][location]["device_count"])
 
         location = item["Destination Reader Identifier"]
+        dNode = time + location
         #print (location)
 
         if (not locInTime(location, time)):
-            print ("New Location ", location)
+            #print ("New Location ", location)
             graph[time][location] = {}
             graph[time][location]["device_count"] = 0
             graph[time][location]["speed"] = 0
             graph[time][location]["devices"] = list()
             nodeCounter += 1
+            try:
+                adjList[oNode].append(dNode)
+            except:
+                print ("Cant add ", dNode, " to ", oNode)
 
         #print("Updating Node")
         graph[time][location]["device_count"] += 1
+        if (graph[time][location]["device_count"] > highestOrderNode):
+            highestOrderNode = graph[time][location]["device_count"]
         increment = float(item["Speed (Miles Per Hour)"])
         increment -= graph[time][location]["speed"]
         increment /= graph[time][location]["device_count"]
         graph[time][location]["speed"] += increment
         graph[time][location]["devices"].append(item["Device Address"])
-        print ("Devices at this location and time: ", graph[time][location]["device_count"])
+        #print ("Devices at this location and time: ", graph[time][location]["device_count"])
     except:
         break
 
 print (counter, " items processed")
 print (nodeCounter, " nodes created in ", timeCounter, " times")
+print ("Highest order node: ", highestOrderNode)
 

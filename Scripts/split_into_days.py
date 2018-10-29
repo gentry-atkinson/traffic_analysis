@@ -32,12 +32,12 @@ while(inFile):
             #outFile.write("New file")
             item = json.dumps(item)
             outFile.write(item)
-            outFile.write("\n")
+            outFile.write('\n')
             fileCounter += 1
         else:
             item = json.dumps(item)
             outFile.write(item)
-            outFile.write("\n")
+            outFile.write('\n')
         counter += 1
     except:
         print ("error in converter loop")
