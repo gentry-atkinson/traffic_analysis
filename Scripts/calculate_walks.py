@@ -20,43 +20,52 @@ def locInTime(item, time):
 
 
 def powerset(iterable):
-    print (iterable)
-    "powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
+    #print (iterable)
+    #"powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
     s = list(iterable)
-    print (s)
+    #print (s)
     return itertools.chain.from_iterable(itertools.combinations(s, r) for r in range(len(s)+1))
 
 
 def findWalk(devices, time, sLocation, cLocation, length, outfile, graph):
-    print(devices, " sent to findWalk for ", cLocation)
-    nextNodes = graph[time][cLocation]["adjList"]
-    for node in nextNodes:
-        nextTime = node.split('/', 2)[0]
-        nextLoc = node.split('/', 2)[1]
-        print ("Checking walk from ", cLocation, " to ", nextLoc)
-        if (compareList(devices, graph[nextTime][nextLoc]["devices"])):
-            findWalk(devices, nextTime, sLocation, nextLoc, length+1, outFile, graph)
-    if (length > 0):
-        print ("Walk found over ", length, " nodes.")
-        outString = "{\"Num_Devices\" : \"" + len(devices) + "\", "
-        outString = outString + "\"Walk_Length\" : \"" + length + "\", "
-        outString = outString + "\"Origin\" : \"" + sLocation + "\", "
-        outString = outString + "\"Destination\" : \"" + cLocation + "\"}"
-        outFile.write((outString))
+    #print(devices, " sent to findWalk for ", cLocation)
+    investigate = True
+    try:
+        nextNodes = graph[time][cLocation]["adjList"]
+    except:
+        #print ("No next node")
+        investigate = False
+    if (investigate):
+        try:
+            for node in nextNodes:
+                nextTime = node.split('/', 2)[0]
+                nextLoc = node.split('/', 2)[1]
+                #print ("Checking walk from ", cLocation, " to ", nextLoc, " at ", nextTime)
+                if (compareList(devices, graph[nextTime][nextLoc]["devices"])):
+                    length += 1
+                    findWalk(devices, nextTime, sLocation, nextLoc, length, outFile, graph)
+        except:
+            print ("Could not check walk for ... some reason")
+    try:
+        if (length > 0):
+            #print ("***Walk found over ", length, " nodes.************")
+            outString = ""
+            outString = outString +"{\"Num_Devices\" : \"" + str(len(devices)) + "\", "
+            outString = outString + "\"Walk_Length\" : \"" + str(length) + "\", "
+            outString = outString + "\"Origin\" : \"" + sLocation + "\", "
+            outString = outString + "\"Destination\" : \"" + cLocation + "\"}\n"
+            outFile.write((outString))
+    except:
+        outFile.write("Couldnt write walk to file\n")
 
 
 def compareList (list1, list2):
-    for item1 in list1:
-        for item2 in list2:
-            if (item1 == item2):
-                found = True
-        if (not found):
-            return False
-        found = False
-    return True
+    #print ("comparing ", list1, " to ", list2)
+    return set(list1) == set(list2)
+    return False
 
 
-inFile = open('/media/gentry/DATA/cs7311/data_sets/split_traffic_files/ITMF_2015-12-31')
+inFile = open('/media/gentry/DATA/cs7311/data_sets/split_traffic_files/ITMF_2017-03-11')
 
 counter = 0
 graph = {}
@@ -138,10 +147,10 @@ while(inFile):
             nodeCounter += 1
             try:
                 dNode = eTime + "/" + dLocation
-                oNode = sTime + "/" + oLocation
+                #oNode = sTime + "/" + oLocation
                 graph[sTime][oLocation]["adjList"].append(dNode)
             except:
-                print ("Cant add ", dNode, " to ", oNode)
+                print ("Cant add ", dNode, " to oNode")
 
         #print("Updating Node")
         graph[eTime][dLocation]["device_count"] += 1
@@ -157,25 +166,25 @@ while(inFile):
         print ("Halted graph making with sTime: ", sTime, " eTime: ", eTime)
         break
 
-outFile = open("walks_over_Austin.json", 'w+')
+outFile = open("walks_over_Austin.json", 'a+')
 
 try:
-    print (len(allTimes), " times to check")
+    #print (len(allTimes), " times to check")
 
     for time in allTimes:
-        print (len(graph[time].keys()), " locations to check")
+        #print (len(graph[time].keys()), " locations to check")
         for loc in graph[time].keys():
-            print ("Check ", loc, " at ", time)
+            #print ("Check ", loc, " at ", time)
             deviceList = powerset(graph[time][loc]["devices"])
-            print (deviceList)
+            #print (deviceList)
             #print (len(deviceList), " devices to check")
             for devices in deviceList:
-                print (devices)
+                #print (devices)
                 if (devices):
                     walkCounter += 1
-                    print ("Checking walk number ", walkCounter)
+                    #print ("Checking walk number ", walkCounter)
                     findWalk(devices, time, loc, loc, 0, outFile, graph)
-                    print ("Finished checking walk number ", walkCounter)
+                    #print ("Finished checking walk number ", walkCounter)
 
 except:
     print ("Halted in walk taking")
@@ -183,6 +192,6 @@ except:
 print (counter, " items processed")
 print (nodeCounter, " nodes created in ", timeCounter, " times", )
 print ("Highest order node: ", highestOrderNode)
-print (walkCounter, " walks investigated.")
+print (walkCounter, " possible walks investigated.")
 
 
