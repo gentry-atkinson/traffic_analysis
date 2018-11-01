@@ -68,7 +68,7 @@ def findWalk(devices, sTime, sLocation, cTime, cLocation, length, outfile, date)
 
 def compareList (list1, list2):
     #print ("comparing ", list1, " to ", list2)
-    return set(list1) == set(list2)
+    return set(list1).issubset(set(list2))
     return False
 
 fileFile = open('files.txt')
