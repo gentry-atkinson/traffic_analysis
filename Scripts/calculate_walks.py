@@ -71,7 +71,7 @@ def compareList (list1, list2):
     return set(list1).issubset(set(list2))
 
 fileFile = open('files.txt')
-outFile = open("walks_over_Austin.json", 'a+')
+outFile = open("/media/gentry/DATA/cs7311/data_sets/walks_over_Austin.json", 'a+')
 
 while(fileFile):
     fileName = fileFile.readline()
