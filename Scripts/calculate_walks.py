@@ -203,7 +203,7 @@ while(fileFile):
                 #print (len(deviceList), " devices to check")
                 for devices in deviceList:
                     #print (devices)
-                    if (len(devices) > 1):
+                    if (len(devices) > 0):
                         walkCounter += 1
                         #print ("Checking walk number ", walkCounter)
                         findWalk(devices, time, loc, time, loc, 0, outFile, date)
