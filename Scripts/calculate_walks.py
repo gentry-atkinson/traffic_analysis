@@ -2,6 +2,7 @@
 
 import json
 import itertools
+import sys
 
 
 def timeInGraph(item):
@@ -47,7 +48,7 @@ def findWalk(devices, sTime, sLocation, cTime, cLocation, length, outfile, date)
                     length += 1
                     findWalk(devices, sTime, sLocation, nextTime, nextLoc, length, outFile, date)
         except:
-            print ("Could not check walk for ... some reason")
+            print ("Could not check walk becasue ", sys.exc_info()[0])
     try:
         if (length > 0):
             #print ("***Walk found over ", length, " nodes.************")
@@ -76,6 +77,7 @@ outFile = open("/media/gentry/DATA/cs7311/data_sets/walks_over_Austin.json", 'a+
 while(fileFile):
     fileName = fileFile.readline()
     fileName = fileName[:-1]
+    #fileName = "ITMF_2016-01-20"
     inFile = open('/media/gentry/DATA/cs7311/data_sets/split_traffic_files/' + fileName)
 
     print("******************************")
@@ -95,6 +97,7 @@ while(fileFile):
     allTimes = list()
     walkCounter = 0
     date = ""
+    latestTime = ""
 
     line = inFile.readline()
 
@@ -190,18 +193,23 @@ while(fileFile):
 
         for time in allTimes:
             #print (len(graph[time].keys()), " locations to check")
+            latestTime = time
             for loc in graph[time].keys():
                 #print ("Check ", loc, " at ", time)
+                if (len(graph[time][loc]["devices"]) > 25):
+                    raise Exception("Device list too long")
                 deviceList = powerset(graph[time][loc]["devices"])
                 #print (deviceList)
                 #print (len(deviceList), " devices to check")
                 for devices in deviceList:
                     #print (devices)
-                    if (devices):
+                    if (len(devices) > 1):
                         walkCounter += 1
                         #print ("Checking walk number ", walkCounter)
                         findWalk(devices, time, loc, time, loc, 0, outFile, date)
                         #print ("Finished checking walk number ", walkCounter)
+                        #if (walkCounter % 1000000 == 0):
+                            #print (walkCounter)
 
     except:
         print ("Halted in walk taking")
@@ -212,6 +220,7 @@ while(fileFile):
     print (nodeCounter, " nodes created in ", timeCounter, " times", )
     print ("Highest order node: ", highestOrderNode)
     print (walkCounter, " possible walks investigated.")
+    print ("Last check started at ", latestTime)
 
 print("All done")
 
