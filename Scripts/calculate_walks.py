@@ -31,6 +31,8 @@ def powerset(iterable):
 def findWalk(devices, sTime, sLocation, cTime, cLocation, length, outfile, date):
     #print(devices, " sent to findWalk for ", cLocation)
     investigate = True
+    if (len(devices) == 0):
+        return
     try:
         nextNodes = graph[cTime][cLocation]["adjList"]
     except:
@@ -44,7 +46,7 @@ def findWalk(devices, sTime, sLocation, cTime, cLocation, length, outfile, date)
                     break
                 nextLoc = node.split('/', 2)[1]
                 #print ("Checking walk from ", cLocation, " to ", nextLoc, " at ", nextTime)
-                if (compareList(devices, graph[nextTime][nextLoc]["devices"])):
+                if (devices.issubset(graph[nextTime][nextLoc]["devices"])):
                     length += 1
                     findWalk(devices, sTime, sLocation, nextTime, nextLoc, length, outFile, date)
         except:
@@ -69,7 +71,7 @@ def findWalk(devices, sTime, sLocation, cTime, cLocation, length, outfile, date)
 
 def compareList (list1, list2):
     #print ("comparing ", list1, " to ", list2)
-    return set(list1).issubset(set(list2))
+    return set(list1.issubset(set(list2)))
 
 fileFile = open('files.txt')
 outFile = open("/media/gentry/DATA/cs7311/data_sets/walks_over_Austin.json", 'a+')
@@ -98,12 +100,13 @@ while(fileFile):
     walkCounter = 0
     date = ""
     latestTime = ""
+    nextDevices = set()
 
     line = inFile.readline()
 
 
     while(inFile):
-        print ("processing number ", counter + 1)
+        #print ("processing number ", counter + 1)
         line = inFile.readline()
         try:
             item = json.loads(line)
@@ -137,7 +140,7 @@ while(fileFile):
             oLocation = item["Origin Reader Identifier"]
 
             if (not locInTime(oLocation, sTime)):
-                #print ("New Location ", location)
+                #print ("New Location ", oLocation)
                 graph[sTime][oLocation] = {}
                 graph[sTime][oLocation]["device_count"] = 0
                 graph[sTime][oLocation]["speed"] = 0
@@ -149,22 +152,27 @@ while(fileFile):
             graph[sTime][oLocation]["device_count"] += 1
             if (graph[sTime][oLocation]["device_count"] > highestOrderNode):
                 highestOrderNode = graph[sTime][oLocation]["device_count"]
+            #print(highestOrderNode)
             increment = float(item["Speed (Miles Per Hour)"])
             increment -= graph[sTime][oLocation]["speed"]
             increment /= graph[sTime][oLocation]["device_count"]
             graph[sTime][oLocation]["speed"] += increment
-            graph[sTime][oLocation]["devices"].append(item["Device Address"])
-            #print ("Devices at this location and time: ", graph[time][location]["device_count"])
+            #print(increment)
+            graph[sTime][oLocation]["devices"].add(item["Device Address"])
+            #print (item["Device Address"])
+            #print ("Devices at this location and time: ", graph[sTime][oLocation]["device_count"])
 
             dLocation = item["Destination Reader Identifier"]
+            #print (dLocation)
 
             if (not locInTime(dLocation, eTime)):
-                #print ("New Location ", location)
+                #print ("New Location ", dLocation)
                 graph[eTime][dLocation] = {}
                 graph[eTime][dLocation]["device_count"] = 0
                 graph[eTime][dLocation]["speed"] = 0
                 graph[eTime][dLocation]["devices"] = set()
                 nodeCounter += 1
+                graph[eTime][dLocation]["adjList"] = list()
                 try:
                     dNode = eTime + "/" + dLocation
                     oNode = sTime + "/" + oLocation
@@ -182,7 +190,7 @@ while(fileFile):
             increment -= graph[eTime][dLocation]["speed"]
             increment /= graph[eTime][dLocation]["device_count"]
             graph[eTime][dLocation]["speed"] += increment
-            graph[eTime][dLocation]["devices"].append(item["Device Address"])
+            graph[eTime][dLocation]["devices"].add(item["Device Address"])
             #print ("Devices at this location and time: ", graph[time][location]["device_count"])
         except:
             print ("Halted graph making with sTime: ", sTime, " eTime: ", eTime)
@@ -197,27 +205,32 @@ while(fileFile):
             latestTime = time
             for loc in graph[time].keys():
                 #print ("Check ", loc, " at ", time)
-                #if (len(graph[time][loc]["devices"]) > 25):
-                #    raise Exception("Device list too long")
-                for node in loc["adjList"]:
-                    nextTime = node.split('/', 2)[0]
-                    nextLoc = node.split('/', 2)[1]
-                    deviceList = graph[time][loc]["devices"].intersection(graph[nextTime][nextLoc]["devices"])
-                    #deviceList = powerset(graph[time][loc]["devices"])
-                    #print (deviceList)
-                    #print (len(deviceList), " devices to check")
-                    for devices in deviceList:
-                        #print (devices)
-                        if (len(devices) > 0):
-                            walkCounter += 1
-                            #print ("Checking walk number ", walkCounter)
-                            findWalk(devices, time, loc, time, loc, 0, outFile, date)
-                            #print ("Finished checking walk number ", walkCounter)
-                            #if (walkCounter % 1000000 == 0):
-                                #print (walkCounter)
+                for node in graph[time][loc]["adjList"]:
+                    #print(node)
+                    try:
+                        nextTime = node.split('/', 2)[0]
+                        nextLoc = node.split('/', 2)[1]
+                        #print (graph[time][loc]["devices"])
+                        nextDevices = graph[nextTime][nextLoc]["devices"]
+                        #print (nextDevices)
+                        deviceList = graph[time][loc]["devices"] & nextDevices
+                        #print (len(deviceList), " devices to check")
+                        for devices in deviceList:
+                            #print (devices)
+                            if (len(deviceList) > 0):
+                                walkCounter += 1
+                                #print ("Checking walk number ", walkCounter)
+                                findWalk(deviceList, time, loc, time, loc, 0, outFile, date)
+                                #print ("Finished checking walk number ", walkCounter)
+                                #if (walkCounter % 1000000 == 0):
+                                    #print (walkCounter)
+                    except:
+                        print('Could not generate device list.')
 
+    except KeyError as error:
+        print ("Hit a key error of type: ", error)
     except:
-        print ("Halted in walk taking")
+        print ("Halted in walk taking becasue ", sys.exc_info()[0])
 
     inFile.close()
 
