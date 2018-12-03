@@ -450,4 +450,3 @@ walk_ITMF_2017-03-23.json
 walk_ITMF_2017-03-24.json
 walk_ITMF_2017-03-25.json
 walk_ITMF_2017-03-26.json
-walks_fileNames.txt
