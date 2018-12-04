@@ -1,0 +1,11 @@
+***********Speeds on Lamar******************
+
+***********Speeds of Ranges******************
+Lower bound inclusive.
+0 to 10 mph:  	314944
+10 to 20 mph:  	3211569
+20 to 30 mph:  	6230284
+30 to 40 mph:  	2252714
+40 to 50 mph:  	255728
+50 to 60 mph:  	12663
+60+ mph:  	1258
