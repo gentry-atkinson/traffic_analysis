@@ -1,9 +1,9 @@
 ***********Speeds of Ranges******************
 Lower bound inclusive.
-0 to 10 mph:  2256903
-10 to 20 mph:  13211872
-20 to 30 mph:  18475629
-30 to 40 mph:  10169677
-40 to 50 mph:  4483509
-50 to 60 mph:  1292444
-60+ mph:  231234
+0 to 10 mph:  	2256903
+10 to 20 mph:  	13211872
+20 to 30 mph:  	18475629
+30 to 40 mph: 	10169677
+40 to 50 mph:  	4483509
+50 to 60 mph:  	1292444
+60+ mph:  	231234
