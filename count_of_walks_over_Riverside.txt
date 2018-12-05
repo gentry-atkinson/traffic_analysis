@@ -2,41 +2,41 @@
 
 
 *************Number of Devices*************
-Number of walks with  1  devices:  580155
-Number of walks with  2  devices:  116336
-Number of walks with  3  devices:  17598
-Number of walks with  4  devices:  5560
-Number of walks with  5  devices:  765
-Number of walks with  6  devices:  468
-Number of walks with  7  devices:  77
-Number of walks with  8  devices:  48
-Number of walks with  10  devices:  20
+Number of walks with  1  devices:  	580155
+Number of walks with  2  devices:  	116336
+Number of walks with  3  devices:  	17598
+Number of walks with  4  devices:  	5560
+Number of walks with  5  devices:  	765
+Number of walks with  6  devices:  	468
+Number of walks with  7  devices:  	77
+Number of walks with  8  devices:  	48
+Number of walks with  10  devices:  	20
 *************Total Distance****************
-Number of walks with  1  distance covered:  697148
-Number of walks with  2  distance covered:  23116
-Number of walks with  3  distance covered:  700
-Number of walks with  4  distance covered:  49
-Number of walks with  6  distance covered:  3
-Number of walks with  8  distance covered:  2
-Number of walks with  5  distance covered:  7
-Number of walks with  7  distance covered:  2
+Number of walks with  1  distance covered: 	697148
+Number of walks with  2  distance covered:  	23116
+Number of walks with  3  distance covered:  	700
+Number of walks with  4  distance covered:  	49
+Number of walks with  6  distance covered:  	3
+Number of walks with  8  distance covered:  	2
+Number of walks with  5  distance covered:  	7
+Number of walks with  7  distance covered:  	2
 ********Devices Over Distance**************
-Devices:  1 	Length:  1 	Total Walks:  557034
-Devices:  1 	Length:  2 	Total Walks:  22362
-Devices:  1 	Length:  3 	Total Walks:  696
-Devices:  1 	Length:  4 	Total Walks:  49
-Devices:  1 	Length:  6 	Total Walks:  3
-Devices:  1 	Length:  8 	Total Walks:  2
-Devices:  1 	Length:  5 	Total Walks:  7
-Devices:  1 	Length:  7 	Total Walks:  2
-Devices:  2 	Length:  1 	Total Walks:  115590
-Devices:  2 	Length:  2 	Total Walks:  742
-Devices:  2 	Length:  3 	Total Walks:  4
-Devices:  3 	Length:  1 	Total Walks:  17586
-Devices:  3 	Length:  2 	Total Walks:  12
-Devices:  4 	Length:  1 	Total Walks:  5560
-Devices:  5 	Length:  1 	Total Walks:  765
-Devices:  6 	Length:  1 	Total Walks:  468
-Devices:  7 	Length:  1 	Total Walks:  77
-Devices:  8 	Length:  1 	Total Walks:  48
-Devices:  10 	Length:  1 	Total Walks:  20
+Devices:  	1 	Length:  	1 	Total Walks:  		557034
+Devices:  	1 	Length:  	2 	Total Walks:  		22362
+Devices:  	1 	Length:  	3 	Total Walks:  		696
+Devices:  	1 	Length:  	4 	Total Walks:  		49
+Devices:  	1 	Length:  	6 	Total Walks:  		3
+Devices:  	1 	Length:  	8 	Total Walks:  		2
+Devices:  	1 	Length:  	5 	Total Walks:  		7
+Devices:  	1 	Length:  	7 	Total Walks:  		2
+Devices:  	2 	Length:  	1 	Total Walks:  		115590
+Devices:  	2 	Length:  	2 	Total Walks:  		742
+Devices:  	2 	Length:  	3 	Total Walks:  		4
+Devices:  	3 	Length:  	1 	Total Walks:  		17586
+Devices:  	3 	Length:  	2 	Total Walks:  		12
+Devices:  	4 	Length:  	1 	Total Walks:  		5560
+Devices:  	5 	Length:  	1 	Total Walks:  		765
+Devices:  	6 	Length:  	1 	Total Walks:  		468
+Devices:  	7 	Length:  	1 	Total Walks:  		77
+Devices:  	8 	Length:  	1 	Total Walks:  		48
+Devices:  	10 	Length:  	1 	Total Walks:  		20
