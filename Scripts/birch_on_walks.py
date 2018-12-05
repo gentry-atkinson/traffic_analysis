@@ -6,7 +6,7 @@ import json
 import os
 
 fileFile = open("walks_fileNames.txt", 'r')
-inFileName = "/home/user/Desktop/cs7311_data/walks/"
+inFileName = "/media/gentry/DATA/cs7311/data_sets/walks/"
 
 thisFileName = inFileName + fileFile.readline()
 thisFileName = thisFileName[:-1]
@@ -15,7 +15,7 @@ inFile = open(thisFileName, 'r')
 line = inFile.readline()
 item = json.loads(line)
 
-counter = 1
+counter = 0
 X = numpy.array([int(item["Num_Devices"]), int(item["Walk_Length"]), float(item["Speed at Origin"]), float(item["Speed at Destination"])])
 
 while(fileFile):
@@ -37,8 +37,11 @@ while(fileFile):
             #print("File ", counter, " has processed.")
             break
 
-        item_array = numpy.array([int(item["Num_Devices"]), int(item["Walk_Length"]), float(item["Speed at Origin"]), float(item["Speed at Destination"])])
-        X = numpy.vstack((X, item_array))
+        if (int(item["Num_Devices"]) > 2 and int(item["Walk_Length"]) > 2):
+
+            item_array = numpy.array([int(item["Num_Devices"]), int(item["Walk_Length"]), float(item["Speed at Origin"]), float(item["Speed at Destination"])])
+            X = numpy.vstack((X, item_array))
+
     print ("File ", counter, " processed.")
 
 cluster_model = Birch(threshold=0.1, branching_factor=20, compute_sample_indices=True, n_clusters=3)
