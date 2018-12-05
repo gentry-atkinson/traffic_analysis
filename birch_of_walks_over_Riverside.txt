@@ -1,0 +1,37 @@
+('******************Wals on ', 'riverside', '***************')
+
+
+('Total number of walks on ', 'riverside', ': ', 721027)
+('Total number of subclusters:', 32)
+[cluster_id=0] N_children: 2 N_samples: 759
+> [cluster_id=1] N_children: 16 N_samples: 434
+> > [cluster_id=2] N_children: 0 N_samples: 15
+> > [cluster_id=3] N_children: 0 N_samples: 32
+> > [cluster_id=4] N_children: 0 N_samples: 31
+> > [cluster_id=5] N_children: 0 N_samples: 40
+> > [cluster_id=6] N_children: 0 N_samples: 32
+> > [cluster_id=7] N_children: 0 N_samples: 30
+> > [cluster_id=8] N_children: 0 N_samples: 32
+> > [cluster_id=9] N_children: 0 N_samples: 29
+> > [cluster_id=10] N_children: 0 N_samples: 19
+> > [cluster_id=11] N_children: 0 N_samples: 14
+> > [cluster_id=12] N_children: 0 N_samples: 35
+> > [cluster_id=13] N_children: 0 N_samples: 40
+> > [cluster_id=14] N_children: 0 N_samples: 17
+> > [cluster_id=15] N_children: 0 N_samples: 16
+> > [cluster_id=16] N_children: 0 N_samples: 20
+> > [cluster_id=17] N_children: 0 N_samples: 32
+> [cluster_id=18] N_children: 13 N_samples: 325
+> > [cluster_id=19] N_children: 0 N_samples: 24
+> > [cluster_id=20] N_children: 0 N_samples: 15
+> > [cluster_id=21] N_children: 0 N_samples: 17
+> > [cluster_id=22] N_children: 0 N_samples: 42
+> > [cluster_id=23] N_children: 0 N_samples: 2
+> > [cluster_id=24] N_children: 0 N_samples: 41
+> > [cluster_id=25] N_children: 0 N_samples: 34
+> > [cluster_id=26] N_children: 0 N_samples: 14
+> > [cluster_id=27] N_children: 0 N_samples: 40
+> > [cluster_id=28] N_children: 0 N_samples: 20
+> > [cluster_id=29] N_children: 0 N_samples: 27
+> > [cluster_id=30] N_children: 0 N_samples: 31
+> > [cluster_id=31] N_children: 0 N_samples: 18

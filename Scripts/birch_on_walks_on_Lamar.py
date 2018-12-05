@@ -7,6 +7,7 @@ import os
 
 fileFile = open("walks_fileNames.txt", 'r')
 inFileName = "/media/gentry/DATA/cs7311/data_sets/walks/"
+street = "riverside"
 
 thisFileName = inFileName + fileFile.readline()
 thisFileName = thisFileName[:-1]
@@ -38,11 +39,14 @@ while(fileFile):
         except:
             #print("File ", counter, " has processed.")
             break
-        walkCounter += 1
-        if (int(item["Num_Devices"]) > 2 and int(item["Walk_Length"]) > 1):
+        origin = item["Origin"]
+        destination = item["Destination"]
+        if (street in origin and street in destination):
+            walkCounter += 1
+            if (int(item["Num_Devices"]) > 2 and int(item["Walk_Length"]) > 1):
 
-            item_array = numpy.array([int(item["Num_Devices"]), int(item["Walk_Length"]), float(item["Speed at Origin"]), float(item["Speed at Destination"])])
-            X = numpy.vstack((X, item_array))
+                item_array = numpy.array([int(item["Num_Devices"]), int(item["Walk_Length"]), float(item["Speed at Origin"]), float(item["Speed at Destination"])])
+                X = numpy.vstack((X, item_array))
 
     print ("File ", fileCounter, " processed.")
 
@@ -51,7 +55,8 @@ cluster_model = Birch(threshold=0.1, branching_factor=20, compute_sample_indices
 cluster_model.fit(X)
 
 htree, _ = birch_hierarchy_wrapper(cluster_model)
-print("Total number of walks: ", walkCounter)
+print("******************Wals on ", street, "***************\n\n")
+print("Total number of walks on ", street, ": ", walkCounter)
 print('Total number of subclusters:', htree.tree_size)
 
 htree.display_tree()
