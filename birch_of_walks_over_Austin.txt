@@ -3,7 +3,7 @@
 ('Total number of walks: ', 50121162)
 ('Total number of subclusters:', 1271)
 [cluster_id=0] N_children: 7 N_samples: 93819
-> [cluster_id=1] N_children: 12 N_samples: 10668
+> [cluster_id=1] N_children: 12 N_samples: 	10668
 > > [cluster_id=2] N_children: 7 N_samples: 353
 > > > [cluster_id=3] N_children: 0 N_samples: 61
 > > > [cluster_id=4] N_children: 0 N_samples: 74

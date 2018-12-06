@@ -7,7 +7,7 @@ import os
 
 fileFile = open("walks_fileNames.txt", 'r')
 inFileName = "/media/gentry/DATA/cs7311/data_sets/walks/"
-street = "riverside"
+street = "red_river"
 
 thisFileName = inFileName + fileFile.readline()
 thisFileName = thisFileName[:-1]
@@ -43,7 +43,7 @@ while(fileFile):
         destination = item["Destination"]
         if (street in origin and street in destination):
             walkCounter += 1
-            if (int(item["Num_Devices"]) > 2 and int(item["Walk_Length"]) > 1):
+            if (int(item["Num_Devices"]) > 1 and int(item["Walk_Length"]) > 1):
 
                 item_array = numpy.array([int(item["Num_Devices"]), int(item["Walk_Length"]), float(item["Speed at Origin"]), float(item["Speed at Destination"])])
                 X = numpy.vstack((X, item_array))
